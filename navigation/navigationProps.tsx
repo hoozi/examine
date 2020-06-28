@@ -11,30 +11,22 @@ export interface INavigationProps extends StackNavigationOptions {
   key: string;
   component: React.ComponentType<any>;
   initialParams?: any;
-  isTab?:boolean;
   modal?: boolean;
   options?: {} | StackNavigationOptions | TOptionsForFunction;
 }
 
 import Login from '../screens/User/Login';
-import Home from '../screens/Home';
 import Examination from '../screens/Examination';
 import History from '../screens/History';
+import Logout from '../screens/Logout';
+import Account from '../screens/Account';
+import Camera from '../screens/Camera';
 
-const authorizedNavigationProps:INavigationProps[] = [
-  {
-    name: 'Home',
-    key: 'Home',
-    component: Home,
-    options: {
-      title: '验箱'
-    }
-  },
+export const authorizedNavigationProps:INavigationProps[] = [
   {
     name: 'Examination',
     key: 'Examination',
     component: Examination,
-    isTab: true,
     options: {
       title: '验箱'
     }
@@ -43,7 +35,6 @@ const authorizedNavigationProps:INavigationProps[] = [
     name: 'History',
     key: 'History',
     component: History,
-    isTab: true,
     options: {
       title: '历史'
     }
@@ -51,10 +42,30 @@ const authorizedNavigationProps:INavigationProps[] = [
   {
     name: 'Account',
     key: 'Account',
-    component: Examination,
-    isTab: true,
+    component: Account,
     options: {
       title: '我的'
+    }
+  }
+]
+
+export const authorizedNotInTabNavigationProps:INavigationProps[] = [
+  {
+    name: 'Logout',
+    key: 'Logout',
+    component: Logout,
+    options: {
+      headerShown: false,
+      cardStyleInterpolator: CardStyleInterpolators.forNoAnimation,
+    }
+  },
+  {
+    name: 'Camera',
+    key: 'Camera',
+    component: Camera,
+    options: {
+      headerShown: false,
+      cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS
     }
   }
 ]
@@ -70,4 +81,3 @@ export const loginNavigationProps:INavigationProps = {
   }
 }
 
-export default authorizedNavigationProps

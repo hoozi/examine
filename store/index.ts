@@ -15,10 +15,14 @@ const options:LoadingConfig = {};
 const loadingPlugin:Plugin = createLoadingPlugin(options)
 
 import user from './models/user';
+import examine from './models/examine';
+import common from './models/common';
 
 const store:RematchStore = init({
   models: {
-    user
+    user,
+    examine,
+    common
   },
   plugins: [loadingPlugin]
 });

@@ -1,6 +1,8 @@
 import { Toast, Portal } from '@ant-design/react-native';
+import store from '../store';
 import { getToken } from './token';
 import { SERVICE_URL } from '../constants';
+import { navigate } from '../navigation';
 
 interface ICodeMessage {
   [code: string]: string;
@@ -44,6 +46,7 @@ function checkStatus(response: Response): Response {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
+  
   const errortext:string = codeMessage[response.status??999] || response.statusText;
   response.status != 401 && Toast.fail(`${errortext}(${response.status??999})`);
   throw response;
@@ -57,7 +60,7 @@ function parseData<T>(response: IResponseData, options?:IApiOptions):TResultData
   if(!response) {
     return {};
   } else {
-    if(!response.data) {
+    if(!response.hasOwnProperty('data')) {
       return response
     } else {
       return options?.onlyData ? response.data : response
@@ -102,6 +105,7 @@ export default async function request<T>(url: string, options?: TOptions): Promi
     ...newOptions.headers,
     Authorization: token ? `Bearer ${token}` : 'Basic YXBwOmFwcA=='
   }
+  console.log(newOptions.body)
   return fetch(`${SERVICE_URL}${url}`, newOptions)
     .then(checkStatus)
     .then(async (response:Response):Promise<any> => {
@@ -117,7 +121,7 @@ export default async function request<T>(url: string, options?: TOptions): Promi
       Portal.remove(toastKey);
       const { status } = response;
       if (status === 401 || status === 403) {
-        
+        navigate('Logout');
       }
     });
 }

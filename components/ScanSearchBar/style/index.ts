@@ -12,9 +12,11 @@ export default StyleSheet.create<IScanSearchBarStyle>({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
+    borderWidth: 2,
+    borderColor: '#2a6ce8',
     marginHorizontal: 12,
     paddingHorizontal: 12,
-    height: 32
+    height: 36
   },
   barTextInput: {
     flex:1,

@@ -5,6 +5,7 @@ export enum color {
   text_base_color = '#333B5A',
   fill_color= '#f7f8fa',
   border_color_base='#ebedf0',
+  warning_color='#fa8c16'
 }
 export default {
   color_text_base: color.text_base_color,

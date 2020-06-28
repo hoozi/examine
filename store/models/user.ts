@@ -1,5 +1,5 @@
 import { stringify } from 'qs';
-import { ModelEffects, ModelReducers } from '@rematch/core';
+import { RematchDispatch, ModelReducers, ModelEffects, Models } from '@rematch/core';
 import request from '../../shared/request';
 import { setToken, removeToken } from '../../shared/token';
 import { encryption } from '../../shared/utils';
@@ -38,7 +38,7 @@ export interface ILoginPayload {
   password: string;
   code: string;
   randomStr?: number;
-  callback?():void;
+  callback?(tk:string):void;
   [key: string]:any;
 }
 
@@ -69,7 +69,7 @@ const reducers:ModelReducers<Partial<IUser>> = {
     return Object.assign(state, payload)
   }
 }
-const effects:ModelEffects<Partial<IUser>> = {
+const effects = (dispatch:RematchDispatch<Models>):ModelEffects<IUser> => ({
   async login(payload:ILoginPayload) {
     const { callback, ...restPayload } = payload;
     const randomStr = Number(Date.now());
@@ -89,7 +89,8 @@ const effects:ModelEffects<Partial<IUser>> = {
     if(token) {
       await setToken(token.access_token);
       this.fetchCurrentUser();
-      callback && callback()
+      //dispatch.common.fetchDirByType('CTN_OWNER');
+      callback && callback(token.access_token);
     }
   },
   async fetchCurrentUser()  {
@@ -98,11 +99,11 @@ const effects:ModelEffects<Partial<IUser>> = {
       this.save(currentUser);
     }
   },
-  async logout(callback) {
+  async logout(callback: () => any) {
     await removeToken();
     callback && callback()
   }
-}
+})
 
 export default {
   state,

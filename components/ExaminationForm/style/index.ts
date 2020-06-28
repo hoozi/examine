@@ -1,5 +1,6 @@
   
-import { StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { StyleSheet, ViewStyle, TextStyle, ImageStyle, View } from 'react-native';
+import { border } from '../../../style/common';
 import { color } from '../../../constants/theme';
 
 interface IExaminationFormStyle {
@@ -8,13 +9,26 @@ interface IExaminationFormStyle {
   extra: ViewStyle;
   extraText: TextStyle;
   breakageList: ViewStyle;
-  breakageListHeader: ViewStyle;
-  breakageListTitle: TextStyle;
+  breakageListAdd: ViewStyle;
+  breakageListAddText: TextStyle;
   breakageCard: ViewStyle;
   breakageCardHeader: ViewStyle;
   breakageCardTitle: TextStyle;
   breakageCardBody: ViewStyle;
+  breakageCardDelete: TextStyle;
+  breakageAddImage: ViewStyle;
+  breakageImage: ImageStyle;
+  breakageImageContainer: ViewStyle;
+  breakageCardFooter: ViewStyle;
+  breakageRemark: TextStyle;
+  deleteImage: ViewStyle;
   name: TextStyle;
+}
+
+const imageStyle:ImageStyle = {
+  borderRadius:4,
+  width: 62,
+  height: 62
 }
 
 export default StyleSheet.create<IExaminationFormStyle>({
@@ -42,42 +56,83 @@ export default StyleSheet.create<IExaminationFormStyle>({
     flex: 1,
     paddingBottom: 40,
   },
-  breakageListHeader: {
+  breakageListAdd: {
     height:42,
     backgroundColor: '#fff',
     paddingHorizontal: 12,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: color.border_color_base,
+    justifyContent: 'center',
+    ...border(`${StyleSheet.hairlineWidth} 0 ${StyleSheet.hairlineWidth}`),
     alignItems: 'center'
   },
-  breakageListTitle: {
+  breakageListAddText: {
     fontWeight: '900',
-    fontSize: 14,
-    color: color.text_base_color
+    fontSize: 16,
+    marginLeft: 4,
+    color: color.warning_color
   },
   breakageCard: {
     marginTop: 12,
     backgroundColor: '#fff',
-    borderRadius: 4,
     borderColor: color.border_color_base,
-    borderWidth: StyleSheet.hairlineWidth,
-    flex:1
+    borderWidth: StyleSheet.hairlineWidth
   },
   breakageCardHeader: {
-    padding:12,
+    paddingHorizontal:12,
+    height: 36,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: color.border_color_base
+    borderBottomColor: color.border_color_base,
+    backgroundColor: '#f9f9f9'
   },
   breakageCardTitle: {
-    fontSize: 16,
+    fontSize: 14,
     color: color.text_base_color
+  },
+  breakageCardDelete: {
+    color: color.warning_color
   },
   breakageCardBody: {
     padding: 12
   },
+  breakageAddImage: {
+    ...imageStyle,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...border(StyleSheet.hairlineWidth)
+  },
+  breakageImageContainer: {
+    ...imageStyle,
+    marginRight: 8,
+    
+  },
+  breakageImage: {
+    ...imageStyle
+  },
+  deleteImage: {
+    width: 20,
+    height: 20,
+    borderRadius: 100,
+    backgroundColor: '#ff5b05',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    top: -8,
+    right: -8
+  },
+  breakageCardFooter: {
+    ...border(`${StyleSheet.hairlineWidth} 0 0 0`),
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  breakageRemark: {
+    flex:1,
+    height: 24,
+    padding: 0,
+    marginLeft: 8
+  }
 })

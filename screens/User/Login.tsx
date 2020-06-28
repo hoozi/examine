@@ -3,11 +3,14 @@ import { View, Text, StyleSheet, TextInputProps, TextInput, SafeAreaView, ImageB
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Toast } from '@ant-design/react-native';
 import { createForm, PropsWithForm, GetFieldPropsOptions, ValidateErrors } from 'rc-form';
-import { AuthContext } from '../../navigation';
+import WhenFocusStatusBar from '../../components/WhenFocusStatusBar';
+import { AuthContext, navigate } from '../../navigation';
 import { hasError } from '../../shared/utils';
 import CaiNiao from '../../icon/CaiNiao';
 import { ILoginPayload } from '../../store/models/user';
 import styles from './style';
+import { color } from '../../constants/theme';
+
 
 interface IInputProps {
   name: string;
@@ -83,7 +86,7 @@ const Login:React.FC<PropsWithForm<any, any>> = ({ form }) => {
   const { forceRender } = useContext(AuthContext);
   const disabled:boolean = hasError(getFieldsError()) || loading.effects.user.login;
   useEffect(() => {
-    //validateFields();
+    validateFields();
     return;
   }, [validateFields]);
   const handleLoginSubmit = useCallback(() => {
@@ -91,14 +94,15 @@ const Login:React.FC<PropsWithForm<any, any>> = ({ form }) => {
       if(error) return Toast.fail('用户名或密码必填!');
       user.login({
         ...values,
-        callback() {
-          forceRender(1);
+        callback(tk:string) {
+          forceRender(tk);
         }
       })
     })
   }, [validateFields]);
   return (
     <SafeAreaView style={styles.container}>
+      <WhenFocusStatusBar barStyle='dark-content' backgroundColor='transparent'/>
       <ImageBackground style={styles.loginForm} source={require('../../static/bg.png')} resizeMode='contain'>
         <Text style={styles.loginTitle}>账号登录</Text>
         {

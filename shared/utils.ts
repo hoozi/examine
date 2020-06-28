@@ -46,6 +46,18 @@ export function encryption(params:IEncryptionParams):ILoginPayload {
 
 export const hasError = (fieldsError:any):boolean => Object.keys(fieldsError).some(field => fieldsError[field]);
 
+export function toFixed2(number:string | number):number {
+  return Number(number.toString().match(/^\d+(?:\.\d{0,2})?/));
+}
+
+export function toHump(name:string):string {
+  return name.toLowerCase().replace(/\_(\w)/g, function(all, letter){
+      return letter.toUpperCase();
+  });
+}
+
+
+
 /* export function checkPermissions(authorities?:TAuthorities, permissions:string=window.localStorage.getItem('permissions')??''):boolean {
   if (isEmpty(permissions)) {
     return true;

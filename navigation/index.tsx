@@ -1,7 +1,9 @@
-import React,{ useState, useEffect, useReducer, createContext } from 'react';
+import React,{ useEffect, useReducer, createContext } from 'react';
 import { Platform, StatusBar } from 'react-native';
 import { NavigationContainer, NavigationContainerRef } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useDispatch } from 'react-redux';
+import { RematchDispatch, Models } from '@rematch/core';
 import CaiNiao from '../icon/CaiNiao';
 import { 
   createStackNavigator, 
@@ -9,7 +11,7 @@ import {
   CardStyleInterpolators, 
   HeaderStyleInterpolators 
 } from '@react-navigation/stack';
-import authorizedNavigationProps, { loginNavigationProps } from './navigationProps';
+import { loginNavigationProps,authorizedNotInTabNavigationProps,authorizedNavigationProps } from './navigationProps';
 import { color } from '../constants/theme';
 import { getToken } from '../shared/token';
 
@@ -26,7 +28,8 @@ const headerOptions:StackNavigationOptions = {
 export type RootParamsList = {
   Main: undefined,
   Login: undefined,
-  Home: undefined
+  Logout: undefined,
+  Camera: undefined
 }
 
 export type TabParamsList = {
@@ -51,7 +54,6 @@ const TabNavigation:React.FC<{}> = () => (
   <TabStack.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon({ focused, color, size }) {
-        let iconName:string = '';
         return <CaiNiao name={iconNameMap[route.name][Number(focused)]} color={color} size={size}/>
       }
     })}
@@ -72,30 +74,36 @@ const TabNavigation:React.FC<{}> = () => (
     }}
   >
     {
-      authorizedNavigationProps.map(props => props.isTab ? <RootStack.Screen {...props}/> : null)
+      authorizedNavigationProps.map(props => <RootStack.Screen {...props}/>)
     }
   </TabStack.Navigator>
-)
+);
+
 
 const AppNavigation:React.FC<{}> = () => {
-  const [token, setToken] = useState<string | null>(`${Date.now()}`);
-  const [_, forceRender] = useReducer<any>(function (s:any) {
-    return s + 1;
-  }, 0);
+  const { common } = useDispatch<RematchDispatch<Models>>();
+  const [token, forceRender] = useReducer(function (s:string | null,tk:string | null) {
+    return tk;
+  }, `${Date.now()}`);
   useEffect(() => {
     async function checkToken(): Promise<void> {
       try {
-        const _token = await getToken();
-        setToken(_token);
+        const _token:string | null = await getToken();
+        if(_token) {
+          common.fetchDirByType('CTN_OWNER');
+        }
+        if(_token !== token) {
+          forceRender(_token);
+        }
       } catch(e) {
         return e
       }
     }
     checkToken();
-    return;
-  },[_, setToken])
+    //return;
+  },[forceRender]);
   return (
-    <AuthContext.Provider value={{forceRender}}>
+    <AuthContext.Provider value={{forceRender, token}}>
       <NavigationContainer ref={navigationRef}>
         <RootStack.Navigator 
           screenOptions={
@@ -118,7 +126,9 @@ const AppNavigation:React.FC<{}> = () => {
                   cardStyleInterpolator: CardStyleInterpolators.forNoAnimation
                 }}
               />
-              <RootStack.Screen {...authorizedNavigationProps[0]}/>
+              {
+                authorizedNotInTabNavigationProps.map(props => <RootStack.Screen {...props}/>)
+              }
             </> : 
             <RootStack.Screen {...loginNavigationProps}/>
           }
